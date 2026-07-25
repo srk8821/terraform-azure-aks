@@ -1,0 +1,24 @@
+# Local .terraform directories (downloaded provider plugins - regenerable via `terraform init`)
+**/.terraform/*
+
+# Terraform state files - contain resource data and can include sensitive values in plaintext
+*.tfstate
+*.tfstate.*
+
+# Crash log files
+crash.log
+crash.*.log
+
+# Variable files often used to pass secrets at apply time - never commit these
+*.tfvars
+*.tfvars.json
+
+# Local override files (used to override resources on a single machine, not meant to be shared)
+override.tf
+override.tf.json
+*_override.tf
+*_override.tf.json
+
+# Terraform CLI config files (may contain credentials/tokens)
+.terraformrc
+terraform.rc

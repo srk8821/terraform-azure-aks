@@ -25,5 +25,11 @@ variable "node_vm_size" {
 variable "node_count" {
   description = "Number of nodes in the default node pool"
   type        = number
-  default     = 1
+  default     = 2
+}
+
+variable "acr_name" {
+  description = "Globally unique name for the Azure Container Registry (alphanumeric only, no hyphens/underscores, 5-50 chars)"
+  type        = string
+  default     = "acraksclustersrk"
 }

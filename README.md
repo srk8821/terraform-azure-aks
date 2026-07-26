@@ -9,21 +9,22 @@ An Azure Kubernetes Service (AKS) cluster provisioned entirely via Terraform, bu
 - Cluster's own managed identity (`SystemAssigned`)
 - OIDC issuer and Workload Identity enabled at the cluster level, in preparation for federated pod-level Azure authentication
 - Azure Container Registry (Basic tier, admin user disabled), with the cluster's kubelet identity granted `AcrPull` — nodes can pull private images with no stored registry credentials
+- Log Analytics workspace + Container Insights (via the cluster's `oms_agent`) — node, pod, and container telemetry shipped to a central workspace; collector runs as a per-node DaemonSet (`ama-logs`)
 
 ## Structure
 
 | File | Purpose |
 |---|---|
-| `providers.tf` | Provider version pin, provider configuration (incl. Key Vault purge-on-destroy behavior for future per-app vaults) |
-| `variables.tf` | Parameterized inputs (region, cluster name, node size, node count, ACR name) |
+| `providers.tf` | Provider version pin, provider configuration (incl. Key Vault and Log Analytics purge/delete-on-destroy behavior) |
+| `variables.tf` | Parameterized inputs (region, cluster name, node size, node count, ACR name, Log Analytics workspace name) |
 | `rg.tf` | Resource group |
-| `aks.tf` | AKS cluster and default node pool |
+| `aks.tf` | AKS cluster, default node pool, Container Insights (`oms_agent`) |
 | `acr.tf` | Container Registry + `AcrPull` role assignment for the cluster's kubelet identity |
+| `monitoring.tf` | Log Analytics workspace backing Container Insights |
 
 ## Roadmap
 
 - [ ] Azure RBAC for Kubernetes Authorization (Entra ID-based cluster access, no static admin credential)
-- [ ] Log Analytics workspace + Container Insights for observability
 
 ## Deliberate scoping decisions
 
@@ -40,5 +41,3 @@ terraform apply
 az aks get-credentials --resource-group <rg-name> --name <cluster-name>
 kubectl get nodes
 ```
-
-Networking uses AKS defaults for now; VNet/subnet integration and private cluster access are deliberately out of scope for this phase.

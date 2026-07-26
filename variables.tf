@@ -33,3 +33,9 @@ variable "acr_name" {
   type        = string
   default     = "acraksclustersrk"
 }
+
+variable "log_analytics_workspace_name" {
+  description = "Name of the Log Analytics workspace (unique within the resource group)"
+  type        = string
+  default     = "log-aks-cluster"
+}

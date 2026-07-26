@@ -33,3 +33,9 @@ variable "acr_name" {
   type        = string
   default     = "acraksclustersrk"
 }
+
+variable "key_vault_name" {
+  description = "Globally unique name for the Key Vault (letters, numbers, hyphens, 3-24 chars, must start with a letter)"
+  type        = string
+  default     = "kv-aks-cluster-srk"
+}

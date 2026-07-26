@@ -9,20 +9,22 @@ An Azure Kubernetes Service (AKS) cluster provisioned entirely via Terraform, bu
 - Cluster's own managed identity (`SystemAssigned`)
 - OIDC issuer and Workload Identity enabled at the cluster level, in preparation for federated pod-level Azure authentication
 - Azure Container Registry (Basic tier, admin user disabled), with the cluster's kubelet identity granted `AcrPull` — nodes can pull private images with no stored registry credentials
+- Key Vault (RBAC-authorized, no legacy access policies, purge protection off to support a clean destroy/rebuild cycle) — infra only for now, no secrets or pod access wired up yet
 
 ## Structure
 
 | File | Purpose |
 |---|---|
 | `providers.tf` | Provider version pin, provider configuration |
-| `variables.tf` | Parameterized inputs (region, cluster name, node size, node count, ACR name) |
+| `variables.tf` | Parameterized inputs (region, cluster name, node size, node count, ACR name, Key Vault name) |
 | `rg.tf` | Resource group |
 | `aks.tf` | AKS cluster and default node pool |
 | `acr.tf` | Container Registry + `AcrPull` role assignment for the cluster's kubelet identity |
+| `keyvault.tf` | Key Vault, RBAC-authorized |
 
 ## Roadmap
 
-- [ ] Key Vault, with Workload Identity federation for secretless pod access
+- [ ] Workload Identity federation, so a specific pod can read Key Vault secrets with no stored credentials
 - [ ] Azure RBAC for Kubernetes Authorization (Entra ID-based cluster access, no static admin credential)
 - [ ] Log Analytics workspace + Container Insights for observability
 

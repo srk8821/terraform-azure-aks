@@ -39,3 +39,9 @@ variable "log_analytics_workspace_name" {
   type        = string
   default     = "log-aks-cluster"
 }
+
+variable "local_account_disabled" {
+  description = "Disable the cluster-local admin account, forcing all access through Entra ID. Set to true only after confirming Entra ID login works, to avoid lockout."
+  type        = bool
+  default     = true
+}

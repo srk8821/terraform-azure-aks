@@ -16,6 +16,9 @@ provider "azurerm" {
     log_analytics_workspace {
       permanently_delete_on_destroy = true
     }
+    resource_group {
+      prevent_deletion_if_contains_resources = false
+    }
   }
   resource_provider_registrations = "none"
 }

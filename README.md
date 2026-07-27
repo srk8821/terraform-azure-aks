@@ -35,6 +35,21 @@ Every access path is identity-based, no stored secrets:
 | `rbac.tf` | Cluster-admin Azure RBAC role assignment for the provisioning identity |
 | `outputs.tf` | Cluster name, ACR login server, OIDC issuer URL, workspace ID, get-credentials command |
 
+## Cluster add-ons (bootstrap)
+
+Platform-wide tooling installed **once per cluster**, consumed by any application deployed onto it. These are deliberately **not** in Terraform: they are in-cluster resources, and installing them via Terraform's `helm`/`kubernetes` providers would couple the data plane into the infrastructure apply (credential/lockout risk). They belong to the platform layer and are installed as a bootstrap step after the cluster is up.
+
+- **External Secrets Operator (ESO)** — syncs secrets from Azure Key Vault into Kubernetes Secrets via Workload Identity. Required by apps like [`bookstack-kubernetes`](../bookstack-kubernetes).
+
+  ```bash
+  helm repo add external-secrets https://charts.external-secrets.io
+  helm repo update
+  helm install external-secrets external-secrets/external-secrets \
+    --namespace external-secrets-system --create-namespace
+  ```
+
+In a mature setup these add-ons would be managed declaratively by a GitOps controller (Argo CD / Flux) rather than imperative `helm install` — a deliberately later phase.
+
 ## Deliberate scoping decisions
 
 - **No Key Vault or Workload Identity federation at the cluster level.** Vaults and app identities are per-application concerns (one vault per app per environment, per Azure best practice) and belong alongside each app when real workloads are deployed. The cluster-level prerequisites (OIDC issuer, Workload Identity webhook) are enabled and ready.
